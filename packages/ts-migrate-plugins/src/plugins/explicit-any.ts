@@ -15,11 +15,11 @@ export interface LintConfig {
 const explicitAnyPlugin: Plugin<Options> = {
   name: 'explicit-any',
 
-  run({ options, fileName, text, getLanguageService }, lintConfig?: LintConfig) {
+  run({ options, fileName, text, getLanguageService }: { options: Options; fileName: string; text: string; getLanguageService: () => ts.LanguageService }, lintConfig?: LintConfig) {
     const semanticDiagnostics = getLanguageService().getSemanticDiagnostics(fileName);
     const diagnostics = semanticDiagnostics
       .filter(isDiagnosticWithLinePosition)
-      .filter((d) => d.category === ts.DiagnosticCategory.Error);
+      .filter((d: { category: ts.DiagnosticCategory }) => d.category === ts.DiagnosticCategory.Error);
     return withExplicitAny(text, diagnostics, options.anyAlias, lintConfig);
   },
 
@@ -34,9 +34,9 @@ function withExplicitAny(
   text: string,
   diagnostics: ts.DiagnosticWithLocation[],
   anyAlias?: string,
-  lintConfig?: any,
+  lintConfig?: LintConfig,
 ): string {
-  const root = j(text, lintConfig);
+  const root = j(text, lintConfig as any);
 
   const anyType = anyAlias != null ? j.tsTypeReference(j.identifier(anyAlias)) : j.tsAnyKeyword();
   const typeAnnotation = j.tsTypeAnnotation(anyType);
@@ -88,19 +88,20 @@ function replaceTS2683(
 
   diagnostics.forEach((diagnostic) => {
     root
-      .find(
-        j.ThisExpression,
-        (node: any) =>
-          node.start === diagnostic.start && node.end === diagnostic.start + diagnostic.length,
+      .find(j.ThisExpression)
+      .filter(
+        (path) =>
+          (path.value as any).start === diagnostic.start && (path.value as any).end === diagnostic.start + diagnostic.length,
       )
       .forEach((path) => {
         let newNode = path.parentPath;
-        // Find the containing function declaration/expression.
-        while (
-          newNode.parentPath &&
-          !j.FunctionDeclaration.check(newNode.node) &&
-          !j.FunctionExpression.check(newNode.node)
-        ) {
+        // Find the containing function declaration/expression, skipping arrows.
+        while (newNode.parentPath) {
+          if (j.FunctionDeclaration.check(newNode.node) || j.FunctionExpression.check(newNode.node)) {
+            if (!j.ArrowFunctionExpression.check(newNode.node)) {
+              break;
+            }
+          }
           newNode = newNode.parentPath;
         }
 
@@ -124,7 +125,7 @@ function replaceTS7006AndTS7008(
     root
       .find(
         j.Identifier,
-        (node: any) =>
+        (node: { start?: number; end?: number; typeAnnotation?: unknown }) =>
           node.start === diagnostic.start &&
           node.end === diagnostic.start + diagnostic.length &&
           node.typeAnnotation == null,
@@ -184,7 +185,7 @@ function replaceTS7019(
     root
       .find(
         j.RestElement,
-        (node: any) =>
+        (node: { start?: number; end?: number; typeAnnotation?: unknown }) =>
           node.start === diagnostic.start &&
           node.end === diagnostic.start + diagnostic.length &&
           node.typeAnnotation == null,
@@ -212,7 +213,7 @@ function replaceTS7031(
       res = res.parent.parent;
     }
     return res;
-  };
+};
 
   diagnostics.forEach((diagnostic) => {
     root.find(j.ObjectPattern).forEach((path) => {
@@ -244,7 +245,7 @@ function replaceTS7034(
     root
       .find(j.Identifier)
       .filter(
-        (path: any) =>
+        (path: { node: { start?: number; end?: number; typeAnnotation?: unknown }; parent: { node: unknown } }) =>
           path.node.start === diagnostic.start &&
           path.node.end === diagnostic.start + diagnostic.length &&
           path.node.typeAnnotation == null,
@@ -271,7 +272,7 @@ function replaceTS2459(
     root
       .find(j.Identifier)
       .filter(
-        (path: any) =>
+        (path: { node: { start?: number; end?: number; typeAnnotation?: unknown }; parentPath?: { node: unknown; parentPath?: unknown; get?: (key: string) => unknown } }) =>
           path.node.start === diagnostic.start &&
           path.node.end === diagnostic.start + diagnostic.length &&
           path.node.typeAnnotation == null,
@@ -319,7 +320,7 @@ function replaceTS2525(
     root
       .find(j.Identifier)
       .filter(
-        (path: any) =>
+        (path: { node: { start?: number; end?: number; typeAnnotation?: unknown }; parentPath: { parentPath: { parentPath: { node: { typeAnnotation?: unknown }; parentPath: { node: unknown; parentPath: { node: unknown } }; get: (key: string) => unknown } } } }) =>
           path.node.start === diagnostic.start &&
           path.node.end === diagnostic.start + diagnostic.length &&
           path.node.typeAnnotation == null,

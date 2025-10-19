@@ -1,15 +1,16 @@
-/* eslint-disable no-use-before-define, @typescript-eslint/no-use-before-define */
 import fs from 'fs';
 import path from 'path';
 import log from 'updatable-log';
 import ts from 'typescript';
-import json5 from 'json5';
-import json5Writer from 'json5-writer';
+import json10 from 'json10';
+import json10Writer from 'json10-writer';
 
 interface RenameParams {
   rootDir: string;
   sources?: string | string[];
 }
+
+const json = json10.JSON10;
 
 export default function rename({
   rootDir,
@@ -128,7 +129,7 @@ function updateProjectJson(rootDir: string) {
   }
 
   const projectJsonText = fs.readFileSync(projectJsonFile, 'utf-8');
-  const projectJson = json5.parse(projectJsonText);
+  const projectJson = json.parse(projectJsonText);
 
   if (projectJson && projectJson.allowedImports) {
     projectJson.allowedImports = projectJson.allowedImports.map((allowedImport: string) =>
@@ -141,7 +142,7 @@ function updateProjectJson(rootDir: string) {
     projectJson.layout = /.jsx?$/.test(layout) ? layout.replace(/\.js(x?)$/, '.ts$1') : layout;
   }
 
-  const writer = json5Writer.load(projectJsonText);
+  const writer = json10Writer.load(projectJsonText);
   writer.write(projectJson);
   fs.writeFileSync(projectJsonFile, writer.toSource({ quote: 'double' }), 'utf-8');
   log.info(`Updated allowedImports in ${projectJsonFile}`);

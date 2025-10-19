@@ -12,4 +12,4 @@ declare module 'updatable-log' {
   export = log;
 }
 
-declare module 'json5-writer';
+declare module 'json10-writer';

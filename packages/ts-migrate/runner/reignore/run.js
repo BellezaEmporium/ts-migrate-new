@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports, no-undef */
 const path = require('path');
 const { execSync } = require('child_process');
 const { pass, fail } = require('create-jest-runner');

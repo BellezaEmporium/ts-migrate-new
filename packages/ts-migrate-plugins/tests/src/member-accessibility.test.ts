@@ -1,6 +1,7 @@
 import { PluginOptionsError } from 'ts-migrate-server';
 import { mockPluginParams } from '../test-utils';
 import memberAccessibilityPlugin from '../../src/plugins/member-accessibility';
+import { describe, it, expect } from '@jest/globals';
 
 describe('member-accessibility plugin', () => {
   it('adds accessibility modifiers to class elements', () => {

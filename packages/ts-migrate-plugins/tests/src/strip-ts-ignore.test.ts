@@ -1,5 +1,6 @@
 import { mockPluginParams } from '../test-utils';
 import stripTSIgnorePlugin from '../../src/plugins/strip-ts-ignore';
+import { describe, it, expect } from '@jest/globals';
 
 describe('strip-ts-ignore plugin', () => {
   it('returns text without `// @ts-ignore`s', async () => {
@@ -76,6 +77,7 @@ describe('strip-ts-ignore plugin', () => {
     \${var2}
 \`);
 
+
     const result = Object.values(diffs).length
       ? Object.values(diffs)
           .reduce((x, y) => x + y)
@@ -87,7 +89,9 @@ describe('strip-ts-ignore plugin', () => {
     )} \${var3})\`;
 
     const str3 = foo
-      ?        bar
+      ?
+
+       bar
       : baz;
   }
 
@@ -143,6 +147,7 @@ describe('strip-ts-ignore plugin', () => {
 
     expect(result).toBe(`import React from 'react'
     import './App.css';
+
 
 
     const a:any = {}

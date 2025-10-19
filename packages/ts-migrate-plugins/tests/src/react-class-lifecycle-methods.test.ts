@@ -1,5 +1,6 @@
 import { mockPluginParams } from '../test-utils';
 import reactClassLifecycleMethodsPlugin from '../../src/plugins/react-class-lifecycle-methods';
+import { describe, it, expect } from '@jest/globals';
 
 describe('react-class-lifecycle-methods plugin', () => {
   it('annotates react lifecycle methods', async () => {

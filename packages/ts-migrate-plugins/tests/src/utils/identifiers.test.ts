@@ -1,5 +1,6 @@
 import ts from 'typescript';
 import { findKnownImports, findKnownVariables } from '../../../src/plugins/utils/identifiers';
+import { describe, it, expect } from '@jest/globals';
 
 const fileName = 'file.tsx';
 

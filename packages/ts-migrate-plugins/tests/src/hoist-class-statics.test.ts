@@ -1,5 +1,6 @@
 import { mockPluginParams } from '../test-utils';
 import hoistClassStaticsPlugin from '../../src/plugins/hoist-class-statics';
+import { describe, it, expect } from '@jest/globals';
 
 describe('hoist-class-statics plugin', () => {
   it('hoists static class properties', async () => {

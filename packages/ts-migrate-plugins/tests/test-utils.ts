@@ -44,7 +44,7 @@ export function mockPluginParams<TOptions = unknown>(params: {
         getSemanticDiagnostics: () => semanticDiagnostics.map(withFile),
         getSyntacticDiagnostics: () => syntacticDiagnostics.map(withFile),
         getSuggestionDiagnostics: () => suggestionDiagnostics.map(withFile),
-      } as any),
+      }) as any,
   };
 }
 
@@ -78,6 +78,14 @@ export async function realPluginParams<TOptions = unknown>(params: {
   const project = await createProject({
     compilerOptions: {
       strict: true,
+      lib: ['dom', 'esnext'],
+      target: ts.ScriptTarget.ESNext as any,
+      moduleResolution: ts.ModuleResolutionKind.Node16,
+      esModuleInterop: true,
+      allowSyntheticDefaultImports: true,
+      forceConsistentCasingInFileNames: true,
+      resolveJsonModule: true,
+      skipLibCheck: true,
     },
     useInMemoryFileSystem: true,
   });
@@ -90,7 +98,7 @@ export async function realPluginParams<TOptions = unknown>(params: {
     fileName,
     rootDir: __dirname,
     text,
-    sourceFile,
-    getLanguageService,
+    sourceFile: sourceFile as any,
+    getLanguageService: getLanguageService as any,
   };
 }

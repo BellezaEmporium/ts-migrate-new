@@ -1,5 +1,6 @@
 import reactDefaultPropsPlugin from '../../src/plugins/react-default-props';
 import { mockPluginParams } from '../test-utils';
+import { describe, it, expect } from '@jest/globals';
 
 describe('react-default-props plugin', () => {
   const options = { useDefaultPropsHelper: true };

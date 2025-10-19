@@ -1,5 +1,6 @@
 import { mockPluginParams } from '../test-utils';
 import reactPropsPlugin from '../../src/plugins/react-props';
+import { describe, it, expect } from '@jest/globals';
 
 describe('react-props plugin', () => {
   it('handles class with propTypes declared as a separate variable', async () => {

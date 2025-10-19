@@ -1,5 +1,6 @@
 import { mockDiagnostic, mockPluginParams } from '../test-utils';
 import declareMissingClassPropertiesPlugin from '../../src/plugins/declare-missing-class-properties';
+import { describe, it, expect } from '@jest/globals';
 
 describe('declare-missing-class-properties plugin', () => {
   it.each([2339, 2551])(

@@ -28,11 +28,13 @@
     "url": "https://github.com/airbnb/ts-migrate/issues"
   },
   "scripts": {
-    "test": "jest --config jest-config.json",
-    "lint": "eslint . --ext=.js,.jsx,.ts,.tsx --ignore-path ../../.eslintignore",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0",
     "build": "tsc -p tsconfig.json",
     "prepublish": "yarn build",
-    "clean": "rm -rf build"
+    "clean:linux": "rm -rf build",
+    "clean:windows": "del /s /q build",
+    "clean": "yarn clean:linux || yarn clean:windows"
   },
   "contributors": [
     {
@@ -59,16 +61,16 @@
   "homepage": "https://github.com/airbnb/ts-migrate#readme",
   "license": "MIT",
   "dependencies": {
-    "eslint": "^7.14.0",
-    "jscodeshift": "^0.13.0",
+    "eslint": "^9.36.0",
+    "jscodeshift": "^17.3.0",
     "json-schema": "^0.4.0",
     "ts-migrate-server": "^0.1.33"
   },
   "gitHead": "7acf6067f15c9bb367cda9c47fcfb4203dcc54f3",
   "devDependencies": {
-    "@ts-morph/bootstrap": "^0.16.0",
-    "@types/json-schema": "^7.0.7",
-    "jest": "26.6.3"
+    "@ts-morph/bootstrap": "^0.28.0",
+    "@types/json-schema": "^7.0.15",
+    "jest": "^30.2.0"
   },
   "peerDependencies": {
     "typescript": ">4.0"

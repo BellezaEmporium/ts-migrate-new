@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define, @typescript-eslint/no-use-before-define */
 import ts, { isJsxFragment } from 'typescript';
 import { Plugin } from 'ts-migrate-server';
 import { isDiagnosticWithLinePosition } from '../utils/type-guards';
@@ -52,7 +51,7 @@ function getTextWithIgnores(
         : diagnostic.messageText.messageText;
     const messageLines = messageText
       .split('\n')
-      .map((l) => l.trim())
+      .map((l: string) => l.trim())
       .filter(Boolean);
     const message = messageLines[messageLines.length - 1];
     const errorExpression = options.useTsIgnore ? 'ts-ignore' : `ts-expect-error`;

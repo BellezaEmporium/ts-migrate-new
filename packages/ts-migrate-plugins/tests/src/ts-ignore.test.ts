@@ -1,5 +1,6 @@
 import tsIgnorePlugin from '../../src/plugins/ts-ignore';
 import { mockPluginParams, mockDiagnostic } from '../test-utils';
+import { describe, it, expect } from '@jest/globals';
 
 describe('ts-ignore plugin', () => {
   it('adds ignore comment', async () => {

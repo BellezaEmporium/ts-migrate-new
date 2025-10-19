@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, no-use-before-define, @typescript-eslint/no-use-before-define */
+/* eslint-disable no-restricted-syntax */
 import ts from 'typescript';
 import { Plugin } from 'ts-migrate-server';
 import {
@@ -217,7 +217,6 @@ function updatePropTypes(
             ts.EmitHint.Unspecified,
             ts.factory.updateParameterDeclaration(
               propsParam,
-              propsParam.decorators,
               propsParam.modifiers,
               propsParam.dotDotDotToken,
               propsParam.name,
@@ -316,7 +315,6 @@ function updateObjectLiteral(
     propTypeIdentifiers,
   });
   let propsTypeAlias = ts.factory.createTypeAliasDeclaration(
-    undefined,
     undefined,
     propsTypeName,
     undefined,
@@ -491,7 +489,7 @@ function isPropTypesStatic(member: ts.ClassElement): member is ts.PropertyDeclar
   return (
     ts.isPropertyDeclaration(member) &&
     member.modifiers != null &&
-    member.modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword) &&
+    member.modifiers.some((modifier: { kind: any; }) => modifier.kind === ts.SyntaxKind.StaticKeyword) &&
     ts.isIdentifier(member.name) &&
     member.name.text === 'propTypes' &&
     member.initializer != null

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module 'updatable-log' {
   const log: {
     error: (...msg: any[]) => void;

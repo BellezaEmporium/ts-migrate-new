@@ -3,18 +3,15 @@ import { Plugin } from 'ts-migrate-server';
 
 const cli = new ESLint({
   fix: true,
-  useEslintrc: true,
-  // Set ignore to false so we can lint in `tmp` for testing
   ignore: false,
 });
 
 const eslintFixPlugin: Plugin = {
   name: 'eslint-fix',
-  async run({ fileName, text }) {
+  async run({ fileName, text }: { fileName: string; text: string }) {
     try {
       let newText = text;
       while (true) {
-        // eslint-disable-next-line no-await-in-loop
         const [report] = await cli.lintText(newText, {
           filePath: fileName,
         });

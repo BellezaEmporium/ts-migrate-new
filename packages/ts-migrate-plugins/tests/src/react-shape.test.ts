@@ -1,5 +1,6 @@
 import reactShapePlugin from '../../src/plugins/react-shape';
 import { mockPluginParams } from '../test-utils';
+import { describe, it, expect } from '@jest/globals';
 
 describe('react-shape plugin', () => {
   it('add types and change default import of the simple shape', async () => {
@@ -16,7 +17,7 @@ type MyShape = {
     test?: string;
     bedrooms?: number | string;
 };
-const MyShape: PropTypes.Requireable<MyShape> = PropTypes.shape({
+const MyShape: PropTypes.Requireable<MyShape> | Validator<MyShape> = PropTypes.shape({
     test: PropTypes.string,
     bedrooms: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 });
@@ -38,7 +39,7 @@ export default BestShape;
 type BestShape = {
     test?: string;
 };
-const BestShape: PropTypes.Requireable<BestShape> = PropTypes.shape({
+const BestShape: PropTypes.Requireable<BestShape> | Validator<BestShape> = PropTypes.shape({
     test: PropTypes.string,
 });
 export default BestShape;
@@ -58,7 +59,7 @@ export const BestShape = PropTypes.shape({
 type BestShape = {
     test?: string;
 };
-const BestShape: PropTypes.Requireable<BestShape> = PropTypes.shape({
+const BestShape: PropTypes.Requireable<BestShape> | Validator<BestShape> = PropTypes.shape({
     test: PropTypes.string,
 });
 export { BestShape };
@@ -86,7 +87,7 @@ type LandingCardsShape = {
     title?: string;
     subtitle?: string;
 };
-const LandingCardsShape: PropTypes.Requireable<LandingCardsShape> = Shape({
+const LandingCardsShape: PropTypes.Requireable<LandingCardsShape> | Validator<LandingCardsShape> = Shape({
     to_link: Types.string,
     title: Types.string,
     subtitle: Types.string,
@@ -118,7 +119,7 @@ type MyShape = {
     };
     amount_formatted?: string;
 };
-const MyShape: PropTypes.Requireable<MyShape> = PropTypes.shape({
+const MyShape: PropTypes.Requireable<MyShape> | Validator<MyShape> = PropTypes.shape({
     price_amount: PropTypes.shape({
         amount: PropTypes.number.isRequired,
         currency: PropTypes.string.isRequired,
@@ -155,7 +156,7 @@ type MyShape = {
     review?: ReviewShape;
     user?: $TSFixMe; // TODO: UserShape.requires(\` first_name, picture_url, \`)
 };
-const MyShape: PropTypes.Requireable<MyShape> = PropTypes.shape({
+const MyShape: PropTypes.Requireable<MyShape> | Validator<MyShape> = PropTypes.shape({
     reviews: PropTypes.arrayOf(ReviewShape),
     review: ReviewShape,
     user: UserShape.requires(\`
@@ -237,7 +238,7 @@ type AddressFormDataShape = {
     placeholders?: $TSFixMe;
 };
 
-const AddressFormDataShape: PropTypes.Requireable<AddressFormDataShape> = Shape({
+const AddressFormDataShape: PropTypes.Requireable<AddressFormDataShape> | Validator<AddressFormDataShape> = Shape({
     fields: Types.arrayOf(Types.oneOf(addressFields)),
     requiredFields: Types.arrayOf(Types.oneOf(addressFields)),
     placeholders: Types.object,
@@ -245,7 +246,7 @@ const AddressFormDataShape: PropTypes.Requireable<AddressFormDataShape> = Shape(
 export { AddressFormDataShape };
 
 export const CountriesShape = Types.arrayOf(Types.arrayOf(Types.string));
-const MyShape: PropTypes.Requireable<MyShape> = Types.shape({
+const MyShape: PropTypes.Requireable<MyShape> | Validator<MyShape> = Types.shape({
     addressFormData: Types.objectOf(AddressFormDataShape),
     allAddressFormFields: Types.arrayOf(Types.oneOf(addressFields)),
     countries: CountriesShape.isRequired,
@@ -304,7 +305,7 @@ type FloorShape = {
     rooms?: RoomShape[];
 };
 
-const FloorShape: PropTypes.Requireable<FloorShape> = Shape({
+const FloorShape: PropTypes.Requireable<FloorShape> | Validator<FloorShape> = Shape({
     id: Types.number,
     name: Types.string,
     rooms: Types.arrayOf(RoomShape),
@@ -362,7 +363,7 @@ export default DateShape;`;
     );
     expect(result).toBe(`import PropTypes from 'prop-types';
 
-const DateShape: PropTypes.Requireable<DateShape> = PropTypes.shape({
+const DateShape: PropTypes.Requireable<DateShape> | Validator<DateShape> = PropTypes.shape({
     publish_date: PropTypes.string.isRequired,
 });
 
@@ -396,7 +397,7 @@ type DateShape = {
   publish_date: string;
 };
 
-const DateShape: PropTypes.Requireable<DateShape> = PropTypes.shape({
+const DateShape: PropTypes.Requireable<DateShape> | Validator<DateShape> = PropTypes.shape({
     publish_date: PropTypes.string.isRequired,
 });
 

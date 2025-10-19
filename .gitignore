@@ -4,6 +4,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# VSCode launch settings (check jscodeshift debug config)
+.vscode
+
 # Runtime data
 *.pid
 *.seed

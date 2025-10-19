@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import { updateImports } from '../../../src/plugins/utils/imports';
 import updateSourceText from '../../../src/utils/updateSourceText';
+import { describe, it, expect } from '@jest/globals';
 
 describe('updateImports', () => {
   it('adds and removes imports', () => {

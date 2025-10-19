@@ -1,10 +1,12 @@
+/* eslint-disable no-undef */
 import path from 'path';
 import fs from 'fs';
 import { createDir, copyDir, deleteDir, getDirData } from '../../test-utils';
 import migrate, { MigrateConfig } from '../../../src/migrate';
+import { jest, describe, beforeEach, afterEach, it, expect } from '@jest/globals';
 
 jest.mock('updatable-log', () => {
-  // eslint-disable-next-line global-require
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { mockUpdatableLog } = require('../../test-utils');
   return mockUpdatableLog();
 });

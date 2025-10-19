@@ -7,26 +7,31 @@ type Options = AnyAliasOptions;
 
 const j = jscodeshift.withParser('tsx');
 
+interface NodeWithPosition {
+  start: number;
+  end: number;
+}
+
 const declareMissingClassPropertiesPlugin: Plugin<Options> = {
   name: 'declare-missing-class-properties',
 
-  async run({ text, fileName, getLanguageService, options }) {
+  async run({ text, fileName, getLanguageService, options }: { text: string; fileName: string; getLanguageService: () => any; options: Options }) {
     const diagnostics = getLanguageService()
       .getSemanticDiagnostics(fileName)
       .filter(isDiagnosticWithLinePosition)
-      .filter((diagnostic) => diagnostic.code === 2339 || diagnostic.code === 2551);
+      .filter((diagnostic: { code: number; }) => diagnostic.code === 2339 || diagnostic.code === 2551);
 
     const root = j(text);
 
     const toAdd: { classBody: ASTPath<ClassBody>; propertyNames: Set<string> }[] = [];
 
-    diagnostics.forEach((diagnostic) => {
+    diagnostics.forEach((diagnostic: { start: number; length: any; }) => {
       root
         .find(j.Identifier)
         .filter(
           (path) =>
-            (path.node as any).start === diagnostic.start &&
-            (path.node as any).end === diagnostic.start + diagnostic.length &&
+            (path.node as unknown as NodeWithPosition).start === diagnostic.start &&
+            (path.node as unknown as NodeWithPosition).end === diagnostic.start + diagnostic.length &&
             path.parentPath.node.type === 'MemberExpression' &&
             path.parentPath.node.object.type === 'ThisExpression',
         )

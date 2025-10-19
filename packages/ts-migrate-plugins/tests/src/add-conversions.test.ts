@@ -1,5 +1,6 @@
 import { realPluginParams } from '../test-utils';
 import addConversionsPlugin from '../../src/plugins/add-conversions';
+import { describe, it, expect } from '@jest/globals';
 
 describe('add-conversions plugin', () => {
   const text = `\
@@ -37,7 +38,7 @@ if ((a as any).b) {
   (b as any).c = 1;
 }
 
-class C  extends (a as any).b {
+class C extends (a as any).b {
 }
 
 enum E {
@@ -64,7 +65,7 @@ if ((a as $TSFixMe).b) {
   (b as $TSFixMe).c = 1;
 }
 
-class C  extends (a as $TSFixMe).b {
+class C extends (a as $TSFixMe).b {
 }
 
 enum E {

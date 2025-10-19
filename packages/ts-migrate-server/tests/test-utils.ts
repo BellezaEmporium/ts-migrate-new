@@ -1,9 +1,8 @@
+/* eslint-disable no-undef */
 import fs from 'fs';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import glob from 'glob';
+import { glob } from 'glob';
 import path from 'path';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import rimraf from 'rimraf';
+import { rimraf } from 'rimraf';
 import log from 'updatable-log';
 
 function assertDirExists(dir: string) {
@@ -77,7 +76,6 @@ export function getDirData(dir1: string, dir2: string) {
   return results;
 }
 
-/* eslint-disable no-console */
 export const mockUpdatableLog: () => typeof log = () => ({
   error: (...msg: unknown[]) => {
     console.log('log.error:', ...msg);
@@ -97,7 +95,6 @@ export const mockUpdatableLog: () => typeof log = () => ({
   clear: () => {},
   quiet: false,
 });
-/* eslint-enable no-console */
 
 export const noopUpdatableLog: () => typeof log = () => ({
   error: () => {},

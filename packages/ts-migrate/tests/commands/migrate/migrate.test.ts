@@ -1,11 +1,13 @@
+/* eslint-disable no-undef */
 import path from 'path';
-// eslint-disable-next-line import/no-extraneous-dependencies
+
 import { tsIgnorePlugin, eslintFixPlugin, explicitAnyPlugin } from 'ts-migrate-plugins';
 import { migrate, MigrateConfig } from 'ts-migrate-server';
 import { createDir, copyDir, deleteDir, getDirData } from '../../test-utils';
+import { jest, describe, beforeEach, afterEach, it, expect } from '@jest/globals';
 
 jest.mock('updatable-log', () => {
-  // eslint-disable-next-line global-require
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { mockUpdatableLog } = require('../../test-utils');
   return mockUpdatableLog();
 });

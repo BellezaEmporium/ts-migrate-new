@@ -1,5 +1,6 @@
 import ts from 'typescript';
 import getTokenAtPosition from '../../../src/plugins/utils/token-pos';
+import { describe, it, expect } from '@jest/globals';
 
 describe('getTokenAtPos', () => {
   it('returns the token at a position', () => {

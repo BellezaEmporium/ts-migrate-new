@@ -1,5 +1,6 @@
 import reactClassStatePlugin from '../../src/plugins/react-class-state';
 import { mockPluginParams } from '../test-utils';
+import { describe, it, expect } from '@jest/globals';
 
 describe('react-class-state plugin', () => {
   it('annotates state if used', async () => {

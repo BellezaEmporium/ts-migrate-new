@@ -1,5 +1,6 @@
 import { mockPluginParams } from '../test-utils';
 import jsDocPlugin from '../../src/plugins/jsdoc';
+import { describe, it, expect } from '@jest/globals';
 
 describe('jsdoc plugin', () => {
   it('annotates unknown types', () => {

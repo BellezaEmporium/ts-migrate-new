@@ -12,6 +12,10 @@ const supportedDiagnostics = new Set([
   2339,
   // TS2571: Object is of type 'unknown'.
   2571,
+  // TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{}'.
+  7053,
+  // TS18046: '<identifier>' is of type 'unknown'. (introduced in TS 5.5)
+  18046,
 ]);
 
 const addConversionsPlugin: Plugin<Options> = {
@@ -22,7 +26,7 @@ const addConversionsPlugin: Plugin<Options> = {
     const diags = getLanguageService()
       .getSemanticDiagnostics(fileName)
       .filter(isDiagnosticWithLinePosition)
-      .filter((diag) => supportedDiagnostics.has(diag.code));
+      .filter((diag: { code: number; }) => supportedDiagnostics.has(diag.code))
 
     const updates = new UpdateTracker(sourceFile);
     ts.transform(sourceFile, [addConversionsTransformerFactory(updates, diags, options)]);
@@ -57,6 +61,7 @@ const addConversionsTransformerFactory =
                 return token.parent.expression;
 
               case 2571:
+              case 18046:
                 return token;
 
               default:
@@ -85,12 +90,18 @@ const addConversionsTransformerFactory =
         return origNode;
       }
 
-      if (needsConversion) {
-        node = factory.createAsExpression(node as ts.Expression, anyType);
+      if (needsConversion && ts.isExpression(node)) {
+        const asExpression = factory.createAsExpression(node, anyType);
+        node = factory.createParenthesizedExpression(asExpression);
       }
 
       if (shouldReplace(node) && !ancestorShouldBeReplaced) {
         replaceNode(origNode, node);
+        return origNode;
+      }
+
+      if (node !== origNode) {
+        updates.replaceNode(origNode, node);
         return origNode;
       }
 

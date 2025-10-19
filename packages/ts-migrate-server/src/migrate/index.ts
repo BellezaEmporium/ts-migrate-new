@@ -66,25 +66,29 @@ export default async function migrate({
       originalSourceFilesToMigrate.has(fileName),
     );
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const sourceFile of sourceFiles) {
       const { fileName } = sourceFile;
-      // const fileTimer = new PerfTimer();
       const relFile = path.relative(rootDir, sourceFile.fileName);
       const fileLogPrefix = `${pluginLogPrefix}[${relFile}]`;
 
-      const getLanguageService = () => project.getLanguageService();
+      const getLanguageService = () =>
+        project.getLanguageService() as unknown as ts.LanguageService;
+      const program = getLanguageService().getProgram();
+      const tsSourceFile = program && program.getSourceFile(fileName);
+      if (!tsSourceFile) {
+        log.error(`${fileLogPrefix} Could not find source file in program.`);
+        continue;
+      }
 
       const params: PluginParams<unknown> = {
         fileName,
         rootDir,
-        sourceFile,
+        sourceFile: tsSourceFile,
         text: sourceFile.text,
         options: pluginOptions,
         getLanguageService,
       };
       try {
-        // eslint-disable-next-line no-await-in-loop
         const newText = await plugin.run(params, lintConfig);
         if (typeof newText === 'string' && newText !== sourceFile.text) {
           project.updateSourceFile(fileName, newText);
@@ -94,7 +98,6 @@ export default async function migrate({
         log.error(`${fileLogPrefix} Error:\n`, pluginErr);
         exitCode = -1;
       }
-      // log.info(`${fileLogPrefix} Finished in ${fileTimer.elapsedStr()}.`);
     }
 
     log.info(`${pluginLogPrefix} Finished in ${pluginTimer.elapsedStr()}.`);
@@ -106,7 +109,6 @@ export default async function migrate({
 
   log.info(`Writing ${updatedSourceFiles.size} updated file(s)...`);
   const writes = [];
-  // eslint-disable-next-line no-restricted-syntax
   for (const fileName of updatedSourceFiles) {
     const sourceFile = project.getSourceFileOrThrow(fileName);
     writes.push(project.fileSystem.writeFile(sourceFile.fileName, sourceFile.text));

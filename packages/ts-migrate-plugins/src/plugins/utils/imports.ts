@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define, no-restricted-syntax */
+/* eslint-disable no-restricted-syntax */
 import ts from 'typescript';
 import { SourceTextUpdate } from '../../utils/updateSourceText';
 import { getTextPreservingWhitespace } from './text';
@@ -182,11 +182,10 @@ export function updateImports(
       if (numImports > 0) {
         const upImpDec = ts.factory.updateImportDeclaration(
           importDeclaration,
-          importDeclaration.decorators,
           importDeclaration.modifiers,
           importClause,
           importDeclaration.moduleSpecifier,
-          importDeclaration.assertClause,
+          (importDeclaration as any).assertClause as ts.ImportAttributes | undefined,
         );
         const text = getTextPreservingWhitespace(importDeclaration, upImpDec, sourceFile);
         updates.push({
@@ -240,14 +239,13 @@ export function updateImports(
         nodes.push(
           ts.factory.createImportDeclaration(
             undefined,
-            undefined,
             ts.factory.createImportClause(
               false,
               nameToAdd.length === 1
-                ? ts.factory.createIdentifier(nameToAdd[0].defaultImport)
-                : undefined,
-              namedImports,
-            ),
+              ? ts.factory.createIdentifier(nameToAdd[0].defaultImport)
+              : undefined,
+                  namedImports,
+                ),
             ts.factory.createStringLiteral(moduleSpecifier),
           ),
         );
@@ -255,15 +253,14 @@ export function updateImports(
         nodes.push(
           ts.factory.createImportDeclaration(
             undefined,
-            undefined,
             ts.factory.createImportClause(false, undefined, namedImports),
             ts.factory.createStringLiteral(moduleSpecifier),
+            undefined,
           ),
         );
         nameToAdd.forEach((cur) => {
           nodes.push(
             ts.factory.createImportDeclaration(
-              undefined,
               undefined,
               ts.factory.createImportClause(
                 false,

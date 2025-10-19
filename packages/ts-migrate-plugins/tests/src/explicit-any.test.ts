@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import { mockPluginParams, mockDiagnostic, realPluginParams } from '../test-utils';
 import explicitAnyPlugin from '../../src/plugins/explicit-any';
+import { describe, it, expect } from '@jest/globals';
 
 describe('explicit-any plugin', () => {
   it('adds explicit any', async () => {
@@ -80,15 +81,14 @@ const {
   varA,
 
   varB: {
-    inVarA, inVarB,
+  inVarA, inVarB,
   } = {}
 }: any = {};
 `);
   });
 
   it('adds explicit any to this', async () => {
-    const text = `\
-function f1(a: any) { return this; }
+    const text = `function f1(a: any) { return this; }
 const f2 = function() { return this; }
 function f3() { return () => this; }
 function f4() { this.a = 1; this.b = 2; }

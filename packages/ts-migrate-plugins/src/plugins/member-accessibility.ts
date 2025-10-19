@@ -7,7 +7,7 @@ import { Properties, validateOptions } from '../utils/validateOptions';
 const accessibility = ['private' as const, 'protected' as const, 'public' as const];
 
 type Options = {
-  defaultAccessibility?: typeof accessibility[number];
+  defaultAccessibility?: (typeof accessibility)[number];
   privateRegex?: string;
   protectedRegex?: string;
   publicRegex?: string;
@@ -88,7 +88,7 @@ const memberAccessibilityTransformerFactory =
       // Nothing to do. Don't bother traversing the AST.
       return (file: ts.SourceFile) => file;
     }
-    return (file: ts.SourceFile) => ts.visitNode(file, visit);
+    return (file: ts.SourceFile) => ts.visitNode(file, visit) as ts.SourceFile;
 
     function visit(origNode: ts.Node): ts.Node {
       const node = ts.visitEachChild(origNode, visit, context);
@@ -122,10 +122,9 @@ const memberAccessibilityTransformerFactory =
             const propertyNode = node as ts.PropertyDeclaration;
             return factory.updatePropertyDeclaration(
               propertyNode,
-              propertyNode.decorators,
               modifiers,
               propertyNode.name,
-              propertyNode.questionToken,
+              propertyNode.questionToken ?? propertyNode.exclamationToken,
               propertyNode.type,
               propertyNode.initializer,
             );
@@ -134,7 +133,6 @@ const memberAccessibilityTransformerFactory =
             const methodNode = node as ts.MethodDeclaration;
             return factory.updateMethodDeclaration(
               methodNode,
-              methodNode.decorators,
               modifiers,
               methodNode.asteriskToken,
               methodNode.name,
@@ -149,7 +147,6 @@ const memberAccessibilityTransformerFactory =
             const accessorNode = node as ts.GetAccessorDeclaration;
             return factory.updateGetAccessorDeclaration(
               accessorNode,
-              accessorNode.decorators,
               modifiers,
               accessorNode.name,
               accessorNode.parameters,
@@ -161,7 +158,6 @@ const memberAccessibilityTransformerFactory =
             const accessorNode = node as ts.SetAccessorDeclaration;
             return factory.updateSetAccessorDeclaration(
               accessorNode,
-              accessorNode.decorators,
               modifiers,
               accessorNode.name,
               accessorNode.parameters,

@@ -1,5 +1,6 @@
 import { mockPluginParams } from '../test-utils';
 import eslintFixPlugin from '../../src/plugins/eslint-fix';
+import { describe, it, expect } from '@jest/globals';
 
 describe('eslint-fix plugin', () => {
   it('handles eslint semicolon', async () => {

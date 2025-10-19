@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax, no-use-before-define, @typescript-eslint/no-use-before-define */
 import ts from 'typescript';
 import path from 'path';
 import { Plugin } from 'ts-migrate-server';
@@ -24,13 +23,13 @@ const reactShapePlugin: Plugin<Options> = {
   run({ fileName, sourceFile, options, text }) {
     const baseName = path.basename(fileName);
     const importDeclarations = sourceFile.statements.filter(ts.isImportDeclaration);
-    const hasPropTypesImport = importDeclarations.find((x) =>
+    const hasPropTypesImport = importDeclarations.find((x: { moduleSpecifier: { getText: () => string; }; }) =>
       /prop-types|react-validators/.test(x.moduleSpecifier.getText()),
     );
     if (hasPropTypesImport === undefined) return undefined;
 
     let shouldAddPropTypesImport =
-      importDeclarations.find((x) => /prop-types/.test(x.moduleSpecifier.getText())) === undefined;
+      importDeclarations.find((x: { moduleSpecifier: { getText: () => string; }; }) => /prop-types/.test(x.moduleSpecifier.getText())) === undefined;
 
     // we are adding a PropTypes.Requireable<FooShape> to shape types, need to be sure that we have a PropTypes import
     const insertPropTypesRequireableNode = () => {
@@ -42,7 +41,7 @@ const reactShapePlugin: Plugin<Options> = {
             ts.EmitHint.Unspecified,
             getPropTypesImportNode(),
             sourceFile,
-          )}\n`,
+          ).replace(/ +$/gm, '')}\n`,
         });
         shouldAddPropTypesImport = false;
       }
@@ -60,7 +59,6 @@ const reactShapePlugin: Plugin<Options> = {
 
       const newExport = ts.factory.createExportDeclaration(
         undefined,
-        undefined,
         false,
         ts.factory.createNamedExports([
           ts.factory.createExportSpecifier(
@@ -73,7 +71,7 @@ const reactShapePlugin: Plugin<Options> = {
       updates.push({
         kind: 'insert',
         index: node.end,
-        text: `\n${printer.printNode(ts.EmitHint.Unspecified, newExport, sourceFile)}`,
+        text: `\n${printer.printNode(ts.EmitHint.Unspecified, newExport, sourceFile).replace(/ +$/gm, '')}`,
       });
     };
 
@@ -82,7 +80,7 @@ const reactShapePlugin: Plugin<Options> = {
     // in current codebase we have some amout of cases, when shapes have an interface/type
     // with the same name and the same export for both of them
     const typesAndInterfaces = sourceFile.statements.filter(
-      (node) => ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node),
+      (node: any) => ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node),
     ) as (ts.InterfaceDeclaration | ts.TypeAliasDeclaration)[];
 
     for (const node of sourceFile.statements) {
@@ -92,7 +90,7 @@ const reactShapePlugin: Plugin<Options> = {
         if (variableDeclaration && variableDeclaration.initializer && !variableDeclaration.type) {
           const exportModifier =
             node.modifiers &&
-            node.modifiers.find((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword);
+            node.modifiers.find((modifier: { kind: any; }) => modifier.kind === ts.SyntaxKind.ExportKeyword);
           if (
             ts.isCallExpression(variableDeclaration.initializer) &&
             variableDeclaration.initializer.arguments.length > 0 &&
@@ -115,7 +113,7 @@ const reactShapePlugin: Plugin<Options> = {
                   ts.EmitHint.Unspecified,
                   getTypeForTheShape(shapeNode, shapeName, sourceFile, options),
                   sourceFile,
-                )}`,
+                ).replace(/ +$/gm, '')}`,
               });
             }
             const updatedVariableDeclaration = ts.factory.updateVariableDeclaration(
@@ -131,7 +129,7 @@ const reactShapePlugin: Plugin<Options> = {
               ts.EmitHint.Unspecified,
               updatedVariableDeclaration,
               sourceFile,
-            );
+            ).replace(/ +$/gm, '');
             updates.push({ kind: 'replace', index, length, text });
 
             if (exportModifier) {
@@ -155,7 +153,7 @@ const reactShapePlugin: Plugin<Options> = {
                 ts.EmitHint.Unspecified,
                 getTypeForTheShape(shapeNode, shapeName, sourceFile, options, true),
                 sourceFile,
-              )}`,
+              ).replace(/ +$/gm, '')}`,
             });
 
             if (exportModifier) {
@@ -183,7 +181,7 @@ const reactShapePlugin: Plugin<Options> = {
             ts.EmitHint.Unspecified,
             getTypeForTheShape(shapeNode, shapeName, sourceFile, options),
             sourceFile,
-          )}`,
+          ).replace(/ +$/gm, '')}`,
         });
 
         updates.push({
@@ -207,7 +205,7 @@ const reactShapePlugin: Plugin<Options> = {
               ),
             ),
             sourceFile,
-          )}`,
+          ).replace(/ +$/gm, '')}`,
         });
 
         const exportShapeExpression = `${ts.sys.newLine}${printer.printNode(
@@ -215,11 +213,10 @@ const reactShapePlugin: Plugin<Options> = {
           ts.factory.createExportAssignment(
             undefined,
             undefined,
-            undefined,
             ts.factory.createIdentifier(shapeName),
           ),
           sourceFile,
-        )}`;
+        ).replace(/ +$/gm, '')}`;
         updates.push({
           kind: 'insert',
           index: node.end,
@@ -228,7 +225,11 @@ const reactShapePlugin: Plugin<Options> = {
       }
     }
 
-    return updateSourceText(text, updates);
+    const result = updateSourceText(text, updates);
+    // Remove trailing spaces from all lines
+    const cleaned = result.replace(/ +$/gm, '');
+    // Preserve final newline if input had one
+    return text.endsWith('\n') && !cleaned.endsWith('\n') ? cleaned + '\n' : cleaned;
   },
 
   validate: createValidate({
@@ -255,7 +256,6 @@ function getTypeForTheShape(
   );
   const propsTypeAlias = ts.factory.createTypeAliasDeclaration(
     undefined,
-    undefined,
     shapeName,
     undefined,
     isArrayShapeType ? ts.factory.createArrayTypeNode(shapeTypeVariable) : shapeTypeVariable,
@@ -278,21 +278,29 @@ function isPropTypesArrayOfShapes(node: ts.CallExpression) {
 function getPropTypesImportNode() {
   return ts.factory.createImportDeclaration(
     undefined,
-    undefined,
     ts.factory.createImportClause(false, ts.factory.createIdentifier('PropTypes'), undefined),
     ts.factory.createStringLiteral('prop-types'),
+    undefined,
   );
 }
 
-// @TODO: PropTypes.Requireable<ShapeType> doesn't works with react-validators Shapes
 function getShapeTypeNode(shapeName: string) {
-  return ts.factory.createTypeReferenceNode(
+  const propTypesRequireable = ts.factory.createTypeReferenceNode(
     ts.factory.createQualifiedName(
       ts.factory.createIdentifier('PropTypes'),
       ts.factory.createIdentifier('Requireable'),
     ),
     [ts.factory.createTypeReferenceNode(ts.factory.createIdentifier(shapeName), undefined)],
   );
+
+  // react-validators shapes don't use PropTypes.Requireable; include a Validator fallback.
+  const reactValidatorsValidator = ts.factory.createTypeReferenceNode(
+    ts.factory.createIdentifier('Validator'),
+    [ts.factory.createTypeReferenceNode(ts.factory.createIdentifier(shapeName), undefined)],
+  );
+
+  // Use a union so the generated types work with either prop-types or react-validators.
+  return ts.factory.createUnionTypeNode([propTypesRequireable, reactValidatorsValidator]);
 }
 
 export default reactShapePlugin;
