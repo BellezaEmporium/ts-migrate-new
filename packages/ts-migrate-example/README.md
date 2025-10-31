@@ -14,7 +14,7 @@ We're using the following input:
 
 ```javascript
 function mult(first, second) {
-    return first * second;
+  return first * second;
 }
 ```
 
@@ -22,7 +22,7 @@ and with a [config of 3 simple plugins](https://github.com/airbnb/ts-migrate/blo
 
 ```typescript
 function tlum(tsrif: number, dnoces: number): number {
-  console.log(`args: ${arguments}`)
+  console.log(`args: ${arguments}`);
   return tsrif * dnoces;
 }
 ```

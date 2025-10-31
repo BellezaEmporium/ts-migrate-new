@@ -31,7 +31,7 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0",
     "build": "tsc -p tsconfig.json",
-    "prepublish": "yarn build",
+    "prepack": "yarn build",
     "clean:linux": "rm -rf build",
     "clean:windows": "del /s /q build",
     "clean": "yarn clean:linux || yarn clean:windows"
@@ -65,8 +65,14 @@
     "pretty-ms": "^9.3.0",
     "updatable-log": "^0.2.0"
   },
+  "devDependencies": {
+    "@jest/globals": "^30.2.0",
+    "glob": "^11.0.3",
+    "rimraf": "^6.0.1",
+    "typescript": "5.9.3"
+  },
   "gitHead": "7acf6067f15c9bb367cda9c47fcfb4203dcc54f3",
   "peerDependencies": {
-    "typescript": ">4.0"
+    "typescript": ">5.0"
   }
 }

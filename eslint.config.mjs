@@ -25,26 +25,8 @@ export default defineConfig([
       // Include rules from @typescript-eslint/recommended
       ...typescriptEslint.configs.recommended.rules,
       // Our custom rules
-      'prettier/prettier': [
-        'error',
-        {
-          arrowParens: 'always',
-          bracketSpacing: true,
-          jsxBracketSameLine: false,
-          printWidth: 100,
-          proseWrap: 'preserve',
-          requirePragma: false,
-          semi: true,
-          singleQuote: true,
-          tabWidth: 2,
-          trailingComma: 'all',
-          useTabs: false,
-          endOfLine: 'crlf', // Add this line
-        },
-        {
-          usePrettierrc: false,
-        },
-      ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'prettier/prettier': 'off',
       quotes: [
         1,
         'single',

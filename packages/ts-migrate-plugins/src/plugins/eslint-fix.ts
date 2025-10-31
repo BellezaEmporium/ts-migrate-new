@@ -1,6 +1,7 @@
 import { ESLint } from 'eslint';
 import { Plugin } from 'ts-migrate-server';
 
+/* eslint-disable-next-line no-undef */
 const cli = new ESLint({
   fix: true,
   ignore: false,

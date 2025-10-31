@@ -112,7 +112,10 @@ function f4(this: any) { this.a = 1; this.b = 2; }
     const text = `const var1 = [];`;
 
     const diagnosticFor = (str: string, code: number) =>
-      mockDiagnostic(text, str, { category: ts.DiagnosticCategory.Error, code });
+      mockDiagnostic(text, str, {
+        category: ts.DiagnosticCategory.Error,
+        code,
+      });
 
     const result = await explicitAnyPlugin.run(
       mockPluginParams({

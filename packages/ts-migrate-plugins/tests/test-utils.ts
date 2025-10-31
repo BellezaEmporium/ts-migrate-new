@@ -36,7 +36,7 @@ export function mockPluginParams<TOptions = unknown>(params: {
   return {
     options: options as unknown as TOptions,
     fileName,
-    rootDir: __dirname,
+    rootDir: typeof __dirname !== 'undefined' ? __dirname : process.cwd(),
     text,
     sourceFile,
     getLanguageService: () =>
@@ -96,7 +96,7 @@ export async function realPluginParams<TOptions = unknown>(params: {
   return {
     options: options as unknown as TOptions,
     fileName,
-    rootDir: __dirname,
+    rootDir: typeof __dirname !== 'undefined' ? __dirname : process.cwd(),
     text,
     sourceFile: sourceFile as any,
     getLanguageService: getLanguageService as any,

@@ -489,7 +489,9 @@ function isPropTypesStatic(member: ts.ClassElement): member is ts.PropertyDeclar
   return (
     ts.isPropertyDeclaration(member) &&
     member.modifiers != null &&
-    member.modifiers.some((modifier: { kind: any; }) => modifier.kind === ts.SyntaxKind.StaticKeyword) &&
+    member.modifiers.some(
+      (modifier: { kind: any }) => modifier.kind === ts.SyntaxKind.StaticKeyword,
+    ) &&
     ts.isIdentifier(member.name) &&
     member.name.text === 'propTypes' &&
     member.initializer != null

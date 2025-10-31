@@ -5,14 +5,13 @@
 
 # Install
 
-Install *ts-migrate-server* using [npm](https://www.npmjs.com):
+Install _ts-migrate-server_ using [npm](https://www.npmjs.com):
 
 `npm install --save-dev ts-migrate-server`
 
 Or [yarn](https://yarnpkg.com):
 
 `yarn add --dev ts-migrate-server`
-
 
 # Usage
 
@@ -34,15 +33,15 @@ process.exit(exitCode);
 
 # FAQ
 
-> How can I use *ts-migrate-server*?
+> How can I use _ts-migrate-server_?
 
 You can take a look at [basic usage example](https://github.com/airbnb/ts-migrate/blob/master/packages/ts-migrate-example/src/index.ts#L2).
-Another resource would be [source code](https://github.com/airbnb/ts-migrate/blob/master/packages/ts-migrate/cli.ts) of the *ts-migrate* cli.
+Another resource would be [source code](https://github.com/airbnb/ts-migrate/blob/master/packages/ts-migrate/cli.ts) of the _ts-migrate_ cli.
 
 > Why not just use codemods?
 
 You actually can use [codemods](https://github.com/airbnb/ts-migrate/blob/master/packages/ts-migrate-plugins/src/plugins/declare-missing-class-properties.ts) in your plugins!
-*ts-migrate-server* provides a more standardized API around TypeScript compiler usage and allows us to use the benefits of the TypeScript APIs without complicated setup.
+_ts-migrate-server_ provides a more standardized API around TypeScript compiler usage and allows us to use the benefits of the TypeScript APIs without complicated setup.
 
 > I have an issue with a specific plugin, what should I do?
 

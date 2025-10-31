@@ -20,7 +20,10 @@ export default async function migrate({
   config,
   sources,
   lintConfig,
-}: MigrateParams): Promise<{ exitCode: number; updatedSourceFiles: Set<string> }> {
+}: MigrateParams): Promise<{
+  exitCode: number;
+  updatedSourceFiles: Set<string>;
+}> {
   let exitCode = 0;
   log.info(`TypeScript version: ${ts.version}`);
 

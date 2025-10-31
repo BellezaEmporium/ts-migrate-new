@@ -57,8 +57,9 @@ const reactDefaultPropsPlugin: Plugin<Options> = {
     const printer = ts.createPrinter();
     const processedPropTypes = new Map<string, string>();
 
-    let shouldAddWithDefaultPropsImport = !importDeclarations.some((importDeclaration: { moduleSpecifier: { getText: () => string; }; }) =>
-      /WithDefaultProps/.test(importDeclaration.moduleSpecifier.getText()),
+    let shouldAddWithDefaultPropsImport = !importDeclarations.some(
+      (importDeclaration: { moduleSpecifier: { getText: () => string } }) =>
+        /WithDefaultProps/.test(importDeclaration.moduleSpecifier.getText()),
     );
 
     const insertWithDefaultPropsImport = () => {
@@ -104,7 +105,9 @@ const reactDefaultPropsPlugin: Plugin<Options> = {
       if (options.useDefaultPropsHelper) insertWithDefaultPropsImport();
 
       const indexOfTypeValue = ts.isIntersectionTypeNode(propsTypeAliasDeclaration.type)
-        ? propsTypeAliasDeclaration.type.types.findIndex((typeEl: any) => ts.isTypeLiteralNode(typeEl))
+        ? propsTypeAliasDeclaration.type.types.findIndex((typeEl: any) =>
+            ts.isTypeLiteralNode(typeEl),
+          )
         : -1;
 
       const propTypesAreOnlyReferences =
@@ -124,7 +127,7 @@ const reactDefaultPropsPlugin: Plugin<Options> = {
       const doesPropsTypeHaveExport =
         propsTypeAliasDeclaration.modifiers &&
         propsTypeAliasDeclaration.modifiers.find(
-          (modifier: { kind: any; }) => modifier.kind === ts.SyntaxKind.ExportKeyword,
+          (modifier: { kind: any }) => modifier.kind === ts.SyntaxKind.ExportKeyword,
         );
 
       // rename type PropName -> type OwnPropName
@@ -132,8 +135,12 @@ const reactDefaultPropsPlugin: Plugin<Options> = {
       // not an ideal way to prevent a double declaration of the OwnPropname,
       // however, this should cover most of the cases
       const alreadyHaveUpdatedName =
-        interfaceDeclarations.some((node: { name: { text: string | string[]; }; }) => node.name.text.includes(updatedProptypesName)) ||
-        typeAliasDeclarations.some((node: { name: { text: string | string[]; }; }) => node.name.text.includes(updatedProptypesName));
+        interfaceDeclarations.some((node: { name: { text: string | string[] } }) =>
+          node.name.text.includes(updatedProptypesName),
+        ) ||
+        typeAliasDeclarations.some((node: { name: { text: string | string[] } }) =>
+          node.name.text.includes(updatedProptypesName),
+        );
 
       updatedProptypesName = alreadyHaveUpdatedName
         ? `Own${componentName}${propsTypeName}`
@@ -219,7 +226,7 @@ const reactDefaultPropsPlugin: Plugin<Options> = {
      * - create/modify type Props = WithDefaultProps
      * - use a new Props type in the component
      */
-    sfcsDefaultPropsAssignments.forEach((defaultProp: { expression: any; }) => {
+    sfcsDefaultPropsAssignments.forEach((defaultProp: { expression: any }) => {
       const expression = defaultProp.expression as ts.BinaryExpression;
       const leftPart = expression.left as ts.PropertyAccessExpression;
       const componentName = leftPart.expression.getText();
@@ -259,7 +266,8 @@ const reactDefaultPropsPlugin: Plugin<Options> = {
       ) {
         const propsTypeName = componentDeclaration.parameters[0].type.getText();
         const propsTypeAliasDeclarations = typeAliasDeclarations.find(
-          (typeAlias: { name: { getText: () => any; }; }) => typeAlias.name.getText() === propsTypeName,
+          (typeAlias: { name: { getText: () => any } }) =>
+            typeAlias.name.getText() === propsTypeName,
         );
 
         if (propsTypeAliasDeclarations) {
@@ -285,7 +293,10 @@ const reactDefaultPropsPlugin: Plugin<Options> = {
 
       const defaultPropsDeclaration = classDeclaration.members
         .filter(ts.isPropertyDeclaration)
-        .filter((declaration: { name: { getText: () => string; }; }) => declaration.name.getText() === 'defaultProps')[0];
+        .filter(
+          (declaration: { name: { getText: () => string } }) =>
+            declaration.name.getText() === 'defaultProps',
+        )[0];
 
       if (!defaultPropsDeclaration) return;
 
@@ -327,7 +338,7 @@ const reactDefaultPropsPlugin: Plugin<Options> = {
 
       const propsTypeName = propsTypeReferenceNode.getText();
       const propsTypeAliasDeclarations = typeAliasDeclarations.find(
-        (typeAlias: { name: { getText: () => any; }; }) => typeAlias.name.getText() === propsTypeName,
+        (typeAlias: { name: { getText: () => any } }) => typeAlias.name.getText() === propsTypeName,
       );
 
       if (propsTypeAliasDeclarations) {

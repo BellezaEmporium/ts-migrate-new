@@ -15,11 +15,26 @@ export interface LintConfig {
 const explicitAnyPlugin: Plugin<Options> = {
   name: 'explicit-any',
 
-  run({ options, fileName, text, getLanguageService }: { options: Options; fileName: string; text: string; getLanguageService: () => ts.LanguageService }, lintConfig?: LintConfig) {
+  run(
+    {
+      options,
+      fileName,
+      text,
+      getLanguageService,
+    }: {
+      options: Options;
+      fileName: string;
+      text: string;
+      getLanguageService: () => ts.LanguageService;
+    },
+    lintConfig?: LintConfig,
+  ) {
     const semanticDiagnostics = getLanguageService().getSemanticDiagnostics(fileName);
     const diagnostics = semanticDiagnostics
       .filter(isDiagnosticWithLinePosition)
-      .filter((d: { category: ts.DiagnosticCategory }) => d.category === ts.DiagnosticCategory.Error);
+      .filter(
+        (d: { category: ts.DiagnosticCategory }) => d.category === ts.DiagnosticCategory.Error,
+      );
     return withExplicitAny(text, diagnostics, options.anyAlias, lintConfig);
   },
 
@@ -79,6 +94,7 @@ function withExplicitAny(
 }
 
 // TS2683: "'this' implicitly has type 'any' because it does not have a type annotation."
+
 function replaceTS2683(
   root: Collection<any>,
   diagnostics: ts.DiagnosticWithLocation[],
@@ -91,13 +107,17 @@ function replaceTS2683(
       .find(j.ThisExpression)
       .filter(
         (path) =>
-          (path.value as any).start === diagnostic.start && (path.value as any).end === diagnostic.start + diagnostic.length,
+          (path.value as any).start === diagnostic.start &&
+          (path.value as any).end === diagnostic.start + diagnostic.length,
       )
       .forEach((path) => {
         let newNode = path.parentPath;
         // Find the containing function declaration/expression, skipping arrows.
         while (newNode.parentPath) {
-          if (j.FunctionDeclaration.check(newNode.node) || j.FunctionExpression.check(newNode.node)) {
+          if (
+            j.FunctionDeclaration.check(newNode.node) ||
+            j.FunctionExpression.check(newNode.node)
+          ) {
             if (!j.ArrowFunctionExpression.check(newNode.node)) {
               break;
             }
@@ -213,7 +233,7 @@ function replaceTS7031(
       res = res.parent.parent;
     }
     return res;
-};
+  };
 
   diagnostics.forEach((diagnostic) => {
     root.find(j.ObjectPattern).forEach((path) => {
@@ -245,7 +265,10 @@ function replaceTS7034(
     root
       .find(j.Identifier)
       .filter(
-        (path: { node: { start?: number; end?: number; typeAnnotation?: unknown }; parent: { node: unknown } }) =>
+        (path: {
+          node: { start?: number; end?: number; typeAnnotation?: unknown };
+          parent: { node: unknown };
+        }) =>
           path.node.start === diagnostic.start &&
           path.node.end === diagnostic.start + diagnostic.length &&
           path.node.typeAnnotation == null,
@@ -272,7 +295,14 @@ function replaceTS2459(
     root
       .find(j.Identifier)
       .filter(
-        (path: { node: { start?: number; end?: number; typeAnnotation?: unknown }; parentPath?: { node: unknown; parentPath?: unknown; get?: (key: string) => unknown } }) =>
+        (path: {
+          node: { start?: number; end?: number; typeAnnotation?: unknown };
+          parentPath?: {
+            node: unknown;
+            parentPath?: unknown;
+            get?: (key: string) => unknown;
+          };
+        }) =>
           path.node.start === diagnostic.start &&
           path.node.end === diagnostic.start + diagnostic.length &&
           path.node.typeAnnotation == null,
@@ -320,7 +350,18 @@ function replaceTS2525(
     root
       .find(j.Identifier)
       .filter(
-        (path: { node: { start?: number; end?: number; typeAnnotation?: unknown }; parentPath: { parentPath: { parentPath: { node: { typeAnnotation?: unknown }; parentPath: { node: unknown; parentPath: { node: unknown } }; get: (key: string) => unknown } } } }) =>
+        (path: {
+          node: { start?: number; end?: number; typeAnnotation?: unknown };
+          parentPath: {
+            parentPath: {
+              parentPath: {
+                node: { typeAnnotation?: unknown };
+                parentPath: { node: unknown; parentPath: { node: unknown } };
+                get: (key: string) => unknown;
+              };
+            };
+          };
+        }) =>
           path.node.start === diagnostic.start &&
           path.node.end === diagnostic.start + diagnostic.length &&
           path.node.typeAnnotation == null,

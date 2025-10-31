@@ -36,7 +36,11 @@ export default Foo;
 `);
 
     const resultWithProps = await reactPropsPlugin.run(
-      mockPluginParams({ text, fileName: 'Foo.tsx', options: { shouldKeepPropTypes: true } }),
+      mockPluginParams({
+        text,
+        fileName: 'Foo.tsx',
+        options: { shouldKeepPropTypes: true },
+      }),
     );
 
     expect(resultWithProps).toBe(`import React from 'react';
@@ -89,7 +93,11 @@ export default Foo;
 `);
 
     const resultWithProps = await reactPropsPlugin.run(
-      mockPluginParams({ text, fileName: 'Foo.tsx', options: { shouldKeepPropTypes: true } }),
+      mockPluginParams({
+        text,
+        fileName: 'Foo.tsx',
+        options: { shouldKeepPropTypes: true },
+      }),
     );
 
     expect(resultWithProps).toBe(`import React, { forwardRef } from 'react';
@@ -173,7 +181,11 @@ export default WrappedComponent;
 `);
 
     const resultWithProps = await reactPropsPlugin.run(
-      mockPluginParams({ text, fileName: 'Foo.tsx', options: { shouldKeepPropTypes: true } }),
+      mockPluginParams({
+        text,
+        fileName: 'Foo.tsx',
+        options: { shouldKeepPropTypes: true },
+      }),
     );
 
     expect(resultWithProps).toBe(`import React, { forwardRef } from 'react';
@@ -615,7 +627,11 @@ export default Foo;
     expect(result).toBe(text);
 
     const resultWithProps = await reactPropsPlugin.run(
-      mockPluginParams({ text, fileName: 'Foo.tsx', options: { shouldKeepPropTypes: true } }),
+      mockPluginParams({
+        text,
+        fileName: 'Foo.tsx',
+        options: { shouldKeepPropTypes: true },
+      }),
     );
 
     expect(resultWithProps).toBe(text);

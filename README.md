@@ -1,16 +1,16 @@
 # ts-migrate
 
-*ts-migrate* is a tool for helping migrate code to TypeScript.
+_ts-migrate_ is a tool for helping migrate code to TypeScript.
 It takes a JavaScript, or a partial TypeScript, project in and gives a compiling TypeScript project out.
 
-*ts-migrate* is intended to accelerate the TypeScript migration process. The resulting code will pass the build, but a followup is required to improve type safety. There will be lots of `// @ts-expect-error`, and `any` that will need to be fixed over time. In general, it is a lot nicer than starting from scratch.
+_ts-migrate_ is intended to accelerate the TypeScript migration process. The resulting code will pass the build, but a followup is required to improve type safety. There will be lots of `// @ts-expect-error`, and `any` that will need to be fixed over time. In general, it is a lot nicer than starting from scratch.
 
-*ts-migrate* is designed as a set of plugins so that it can be pretty customizable for different use-cases. Potentially, more plugins can be added for addressing things like improvements of type quality or libraries-related things (like prop-types in React).
+_ts-migrate_ is designed as a set of plugins so that it can be pretty customizable for different use-cases. Potentially, more plugins can be added for addressing things like improvements of type quality or libraries-related things (like prop-types in React).
 
 Plugins are combined into migration configs. We currently have two main migration configs:
 
-* for the main JavaScript → TypeScript migration
-* for the reignore script
+- for the main JavaScript → TypeScript migration
+- for the reignore script
 
 These configs can be moved out of the default script, and people can add custom configs with a different set of plugins for their needs.
 
@@ -18,21 +18,19 @@ You can find instructions on how to install and run ts-migrate in the [main pack
 
 Check out the [blog post](https://medium.com/airbnb-engineering/ts-migrate-a-tool-for-migrating-to-typescript-at-scale-cd23bfeb5cc) about ts-migrate!
 
-
 # Published Packages
 
-| Folder | Version | Package |
-| ------ | ------- | ------- |
-| [packages/ts-migrate](./packages/ts-migrate/) | [![npm version](https://badge.fury.io/js/ts-migrate.svg)](https://badge.fury.io/js/ts-migrate) | [ts-migrate](https://www.npmjs.com/package/ts-migrate) |
+| Folder                                                        | Version                                                                                                        | Package                                                                |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [packages/ts-migrate](./packages/ts-migrate/)                 | [![npm version](https://badge.fury.io/js/ts-migrate.svg)](https://badge.fury.io/js/ts-migrate)                 | [ts-migrate](https://www.npmjs.com/package/ts-migrate)                 |
 | [packages/ts-migrate-plugins](./packages/ts-migrate-plugins/) | [![npm version](https://badge.fury.io/js/ts-migrate-plugins.svg)](https://badge.fury.io/js/ts-migrate-plugins) | [ts-migrate-plugins](https://www.npmjs.com/package/ts-migrate-plugins) |
-| [packages/ts-migrate-server](./packages/ts-migrate-server/) | [![npm version](https://badge.fury.io/js/ts-migrate-server.svg)](https://badge.fury.io/js/ts-migrate-server) | [ts-migrate-server](https://www.npmjs.com/package/ts-migrate-server) |
+| [packages/ts-migrate-server](./packages/ts-migrate-server/)   | [![npm version](https://badge.fury.io/js/ts-migrate-server.svg)](https://badge.fury.io/js/ts-migrate-server)   | [ts-migrate-server](https://www.npmjs.com/package/ts-migrate-server)   |
 
 # Unpublished Packages
 
-| Folder | Description |
-| ------ | -----------|
+| Folder                                                        | Description                                                                           |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | [packages/ts-migrate-example](./packages/ts-migrate-example/) | basic example of usage of the ts-migrate-server with a writing a custom simple plugin |
-
 
 # Authors
 
@@ -66,7 +64,6 @@ Check out the [blog post](https://medium.com/airbnb-engineering/ts-migrate-a-too
      </tr>
   </tbody>
 </table>
-
 
 # License
 

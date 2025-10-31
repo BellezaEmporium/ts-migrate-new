@@ -2,28 +2,24 @@
   "preset": "ts-jest",
   "testEnvironment": "node",
   "transform": {
-    "^.+\\.tsx?$": ["ts-jest", {
-      "useESM": true
-    }],
-    "^.+\\.m?js$": ["ts-jest", {
-      "useESM": true
-    }]
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        "useESM": true
+      }
+    ],
+    "^.+\\.m?js$": [
+      "ts-jest",
+      {
+        "useESM": true
+      }
+    ]
   },
-  "transformIgnorePatterns": [
-    "node_modules/(?!(pretty-ms|parse-ms)/)"
-  ],
-  "moduleFileExtensions": [
-    "ts",
-    "tsx",
-    "js",
-    "jsx",
-    "json"
-  ],
+  "transformIgnorePatterns": ["node_modules/(?!(pretty-ms|parse-ms)/)"],
+  "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
   "bail": false,
   "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|js)$",
-  "testPathIgnorePatterns": [
-    "<rootDir>/node_modules/"
-  ],
+  "testPathIgnorePatterns": ["<rootDir>/node_modules/"],
   "extensionsToTreatAsEsm": [".ts"],
   "moduleNameMapper": {
     "^(\\.{1,2}/.*)\\.js$": "$1"

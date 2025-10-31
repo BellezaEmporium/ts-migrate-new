@@ -345,7 +345,11 @@ function A() {}
 `;
 
     const result = jsDocPlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { annotateReturns: true } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { annotateReturns: true },
+      }),
     );
 
     expect(result).toBe(`\
@@ -449,7 +453,11 @@ const O = {
 `;
 
     const result = jsDocPlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { annotateReturns: true } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { annotateReturns: true },
+      }),
     );
 
     expect(result).toBe(`\
@@ -479,7 +487,11 @@ window.c = function(c) {};
 `;
 
     const result = jsDocPlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { annotateReturns: true } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { annotateReturns: true },
+      }),
     );
 
     expect(result).toBe(`\
@@ -507,7 +519,11 @@ window.e = (e) => null;
 `;
 
     const result = jsDocPlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { annotateReturns: true } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { annotateReturns: true },
+      }),
     );
 
     expect(result).toBe(`\

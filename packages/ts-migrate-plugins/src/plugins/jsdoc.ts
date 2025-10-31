@@ -56,7 +56,6 @@ const defaultTypeMap: TypeMap = {
   promise: 'Promise',
 };
 
-
 type Options = {
   annotateReturns?: boolean;
   typeMap?: TypeMap;
@@ -70,7 +69,10 @@ const optionProperties: Properties = {
       { type: 'string' },
       {
         type: 'object',
-        properties: { tsName: { type: 'string' }, acceptsTypeParameters: { type: 'boolean' } },
+        properties: {
+          tsName: { type: 'string' },
+          acceptsTypeParameters: { type: 'boolean' },
+        },
         additionalProperties: false,
       },
     ],
@@ -116,7 +118,6 @@ function getEntityNameText(name: ts.EntityName): string {
   return `${getEntityNameText(name.left)}.${name.right.text}`;
 }
 
-
 const jsDocTransformerFactory =
   (updates: UpdateTracker, { annotateReturns, anyAlias, typeMap: optionsTypeMap }: Options) =>
   (context: ts.TransformationContext) => {
@@ -142,8 +143,8 @@ const jsDocTransformerFactory =
         ts.isMethodDeclaration(node) && insideClass
           ? modifiersFromJSDoc(node, factory)
           : ts.canHaveModifiers(node)
-          ? ts.getModifiers(node)
-          : undefined;
+            ? ts.getModifiers(node)
+            : undefined;
       const parameters = visitParameters(node);
       const returnType = annotateReturns ? visitReturnType(node) : node.type;
       if (
@@ -176,21 +177,20 @@ const jsDocTransformerFactory =
       }
     }
 
-    function visitParameters(
-      fn: ts.SignatureDeclaration
-    ): ReadonlyArray<ts.ParameterDeclaration> {
+    function visitParameters(fn: ts.SignatureDeclaration): ReadonlyArray<ts.ParameterDeclaration> {
       if (!ts.hasJSDocParameterTags(fn)) return fn.parameters;
 
-      const allParamTags = ts.getJSDocTags(fn)
+      const allParamTags = ts
+        .getJSDocTags(fn)
         .filter((t): t is ts.JSDocParameterTag => t.kind === ts.SyntaxKind.JSDocParameterTag);
 
-      const newParams = fn.parameters.map(param => {
+      const newParams = fn.parameters.map((param) => {
         if (param.type) return param;
 
         // 🩹 Handle destructured params: { a, b }
         if (ts.isObjectBindingPattern(param.name)) {
           const rootTag = allParamTags.find(
-            t => t.name && getEntityNameText(t.name as ts.EntityName).includes('.')
+            (t) => t.name && getEntityNameText(t.name as ts.EntityName).includes('.'),
           );
           if (rootTag && rootTag.name) {
             const rootName = getEntityNameText(rootTag.name as ts.EntityName).split('.')[0];
@@ -202,7 +202,7 @@ const jsDocTransformerFactory =
               param.name,
               param.questionToken,
               type,
-              param.initializer
+              param.initializer,
             );
           }
           // default to generic object if no match
@@ -213,7 +213,7 @@ const jsDocTransformerFactory =
             param.name,
             param.questionToken,
             factory.createKeywordTypeNode(ts.SyntaxKind.ObjectKeyword),
-            param.initializer
+            param.initializer,
           );
         }
 
@@ -221,10 +221,10 @@ const jsDocTransformerFactory =
         if (!name) return param;
 
         const directTag = allParamTags.find(
-          t => t.name && ts.isIdentifier(t.name) && t.name.text === name && t.typeExpression
+          (t) => t.name && ts.isIdentifier(t.name) && t.name.text === name && t.typeExpression,
         );
 
-        const nestedTags = allParamTags.filter(t => {
+        const nestedTags = allParamTags.filter((t) => {
           if (!t.name || !ts.isIdentifier(t.name)) return false;
           return t.name.text.startsWith(`${name}.`);
         });
@@ -238,8 +238,7 @@ const jsDocTransformerFactory =
           const typeNode = directTag.typeExpression.type;
           type = visitJSDocType(typeNode);
           questionToken =
-            !param.initializer &&
-            (directTag.isBracketed || ts.isJSDocOptionalType(typeNode))
+            !param.initializer && (directTag.isBracketed || ts.isJSDocOptionalType(typeNode))
               ? factory.createToken(ts.SyntaxKind.QuestionToken)
               : param.questionToken;
         }
@@ -253,7 +252,7 @@ const jsDocTransformerFactory =
           param.name,
           questionToken,
           type,
-          param.initializer
+          param.initializer,
         );
       });
 
@@ -294,7 +293,8 @@ const jsDocTransformerFactory =
           if (ts.isTypeReferenceNode(visited) && ts.isIdentifier(visited.typeName)) {
             const text = visited.typeName.text;
             // Try both original case and lowercase for JSDoc primitives
-            const normalized = primitiveKeywordNode(text) || primitiveKeywordNode(text.toLowerCase());
+            const normalized =
+              primitiveKeywordNode(text) || primitiveKeywordNode(text.toLowerCase());
             if (normalized) {
               visited = normalized;
             }
@@ -304,13 +304,15 @@ const jsDocTransformerFactory =
           propertyType = anyType;
         }
 
-        const isOptional = tag.isBracketed || (tag.typeExpression && ts.isJSDocOptionalType(tag.typeExpression.type));
+        const isOptional =
+          tag.isBracketed ||
+          (tag.typeExpression && ts.isJSDocOptionalType(tag.typeExpression.type));
 
         return factory.createPropertySignature(
           undefined,
           propertyName,
           isOptional ? factory.createToken(ts.SyntaxKind.QuestionToken) : undefined,
-          propertyType
+          propertyType,
         );
       });
 
@@ -429,12 +431,12 @@ const jsDocTransformerFactory =
         : node.dotDotDotToken;
 
       return factory.createParameterDeclaration(
-      node.modifiers,
-      dotdotdot,
-      name,
-      node.questionToken,
-      ts.visitNode(node.type, visitJSDocType) as ts.TypeNode,
-      node.initializer
+        node.modifiers,
+        dotdotdot,
+        name,
+        node.questionToken,
+        ts.visitNode(node.type, visitJSDocType) as ts.TypeNode,
+        node.initializer,
       );
     }
 
@@ -473,7 +475,7 @@ const jsDocTransformerFactory =
         name = factory.createIdentifier(text);
 
         if (node.typeArguments && acceptsTypeParameters) {
-          const normalizedArgs = node.typeArguments.map(arg => {
+          const normalizedArgs = node.typeArguments.map((arg) => {
             const visited = visitJSDocType(arg);
             // Map inner TypeReference(String/Number/Boolean/Object/Symbol) to keyword where possible
             if (ts.isTypeReferenceNode(visited) && ts.isIdentifier(visited.typeName)) {
@@ -507,11 +509,7 @@ const jsDocTransformerFactory =
         /* initializer */ undefined,
       );
       const indexSignature = factory.createTypeLiteralNode([
-        factory.createIndexSignature(
-          /* modifiers */ undefined,
-          [index],
-          typeArguments[1],
-        ),
+        factory.createIndexSignature(/* modifiers */ undefined, [index], typeArguments[1]),
       ]);
       ts.setEmitFlags(indexSignature, ts.EmitFlags.SingleLine);
       return indexSignature;

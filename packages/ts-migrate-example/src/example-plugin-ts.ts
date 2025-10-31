@@ -56,7 +56,12 @@ const examplePluginTs: Plugin<Options> = {
         // generate a new source text for the function declaration
         const text = printer.printNode(ts.EmitHint.Unspecified, newFunctionDeclaration, sourceFile);
 
-        updates.push({ kind: 'replace', index: start, length: end - start, text });
+        updates.push({
+          kind: 'replace',
+          index: start,
+          length: end - start,
+          text,
+        });
       }
     });
     return updateSourceText(text, updates);

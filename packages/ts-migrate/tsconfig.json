@@ -3,8 +3,5 @@
   "compilerOptions": {
     "outDir": "build"
   },
-  "exclude": [
-    "tests",
-    "build"
-  ]
+  "exclude": ["tests", "build"]
 }

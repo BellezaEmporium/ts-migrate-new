@@ -4,6 +4,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+.yarn/*
+
 # VSCode launch settings (check jscodeshift debug config)
 .vscode
 

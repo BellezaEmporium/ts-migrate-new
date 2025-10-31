@@ -16,7 +16,11 @@ export default Foo;
 `;
 
     const result = await reactClassStatePlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
 
     expect(result).toBe(`import React from 'react';
@@ -53,7 +57,11 @@ export default Foo;
 `;
 
     const result = await reactClassStatePlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
 
     expect(result).toBe(text);
@@ -74,7 +82,11 @@ export default Foo;
 `;
 
     const result = await reactClassStatePlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
 
     expect(result).toBe(text);
@@ -99,7 +111,11 @@ export default Foo;
 `;
 
     const result = await reactClassStatePlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
 
     expect(result).toBe(`import React from 'react';
@@ -141,7 +157,11 @@ export default Foo;
 `;
 
     const result = await reactClassStatePlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
 
     expect(result).toBe(`import React from 'react';

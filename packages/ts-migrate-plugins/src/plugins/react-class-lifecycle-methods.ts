@@ -124,7 +124,12 @@ function annotateReactComponentLifecycleMethods(
             // Remove surrounding parentheses
             text = text.slice(1, text.length - 1);
 
-            updates.push({ kind: 'replace', index: start, length: end - start, text });
+            updates.push({
+              kind: 'replace',
+              index: start,
+              length: end - start,
+              text,
+            });
           }
         }
       });

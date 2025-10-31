@@ -241,7 +241,11 @@ class Foo extends React.Component<FooProps, FooState> {
 `;
 
     const result = await reactClassLifecycleMethodsPlugin.run(
-      mockPluginParams({ options: { force: true }, text, fileName: 'file.tsx' }),
+      mockPluginParams({
+        options: { force: true },
+        text,
+        fileName: 'file.tsx',
+      }),
     );
 
     expect(result).toBe(`import React from 'react';

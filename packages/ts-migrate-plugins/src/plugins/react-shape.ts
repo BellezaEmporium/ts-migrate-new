@@ -23,13 +23,16 @@ const reactShapePlugin: Plugin<Options> = {
   run({ fileName, sourceFile, options, text }) {
     const baseName = path.basename(fileName);
     const importDeclarations = sourceFile.statements.filter(ts.isImportDeclaration);
-    const hasPropTypesImport = importDeclarations.find((x: { moduleSpecifier: { getText: () => string; }; }) =>
-      /prop-types|react-validators/.test(x.moduleSpecifier.getText()),
+    const hasPropTypesImport = importDeclarations.find(
+      (x: { moduleSpecifier: { getText: () => string } }) =>
+        /prop-types|react-validators/.test(x.moduleSpecifier.getText()),
     );
     if (hasPropTypesImport === undefined) return undefined;
 
     let shouldAddPropTypesImport =
-      importDeclarations.find((x: { moduleSpecifier: { getText: () => string; }; }) => /prop-types/.test(x.moduleSpecifier.getText())) === undefined;
+      importDeclarations.find((x: { moduleSpecifier: { getText: () => string } }) =>
+        /prop-types/.test(x.moduleSpecifier.getText()),
+      ) === undefined;
 
     // we are adding a PropTypes.Requireable<FooShape> to shape types, need to be sure that we have a PropTypes import
     const insertPropTypesRequireableNode = () => {
@@ -37,11 +40,9 @@ const reactShapePlugin: Plugin<Options> = {
         updates.push({
           kind: 'insert',
           index: 0,
-          text: `${printer.printNode(
-            ts.EmitHint.Unspecified,
-            getPropTypesImportNode(),
-            sourceFile,
-          ).replace(/ +$/gm, '')}\n`,
+          text: `${printer
+            .printNode(ts.EmitHint.Unspecified, getPropTypesImportNode(), sourceFile)
+            .replace(/ +$/gm, '')}\n`,
         });
         shouldAddPropTypesImport = false;
       }
@@ -90,7 +91,9 @@ const reactShapePlugin: Plugin<Options> = {
         if (variableDeclaration && variableDeclaration.initializer && !variableDeclaration.type) {
           const exportModifier =
             node.modifiers &&
-            node.modifiers.find((modifier: { kind: any; }) => modifier.kind === ts.SyntaxKind.ExportKeyword);
+            node.modifiers.find(
+              (modifier: { kind: any }) => modifier.kind === ts.SyntaxKind.ExportKeyword,
+            );
           if (
             ts.isCallExpression(variableDeclaration.initializer) &&
             variableDeclaration.initializer.arguments.length > 0 &&
@@ -109,11 +112,13 @@ const reactShapePlugin: Plugin<Options> = {
               updates.push({
                 kind: 'insert',
                 index: node.pos,
-                text: `\n\n${printer.printNode(
-                  ts.EmitHint.Unspecified,
-                  getTypeForTheShape(shapeNode, shapeName, sourceFile, options),
-                  sourceFile,
-                ).replace(/ +$/gm, '')}`,
+                text: `\n\n${printer
+                  .printNode(
+                    ts.EmitHint.Unspecified,
+                    getTypeForTheShape(shapeNode, shapeName, sourceFile, options),
+                    sourceFile,
+                  )
+                  .replace(/ +$/gm, '')}`,
               });
             }
             const updatedVariableDeclaration = ts.factory.updateVariableDeclaration(
@@ -125,11 +130,9 @@ const reactShapePlugin: Plugin<Options> = {
             );
             const index = variableDeclaration.pos + 1;
             const length = variableDeclaration.end - index;
-            const text = printer.printNode(
-              ts.EmitHint.Unspecified,
-              updatedVariableDeclaration,
-              sourceFile,
-            ).replace(/ +$/gm, '');
+            const text = printer
+              .printNode(ts.EmitHint.Unspecified, updatedVariableDeclaration, sourceFile)
+              .replace(/ +$/gm, '');
             updates.push({ kind: 'replace', index, length, text });
 
             if (exportModifier) {
@@ -149,11 +152,13 @@ const reactShapePlugin: Plugin<Options> = {
             updates.push({
               kind: 'insert',
               index: node.pos,
-              text: `\n\n${printer.printNode(
-                ts.EmitHint.Unspecified,
-                getTypeForTheShape(shapeNode, shapeName, sourceFile, options, true),
-                sourceFile,
-              ).replace(/ +$/gm, '')}`,
+              text: `\n\n${printer
+                .printNode(
+                  ts.EmitHint.Unspecified,
+                  getTypeForTheShape(shapeNode, shapeName, sourceFile, options, true),
+                  sourceFile,
+                )
+                .replace(/ +$/gm, '')}`,
             });
 
             if (exportModifier) {
@@ -177,46 +182,52 @@ const reactShapePlugin: Plugin<Options> = {
         updates.push({
           kind: 'insert',
           index: importDeclarations[importDeclarations.length - 1].end,
-          text: `\n\n${printer.printNode(
-            ts.EmitHint.Unspecified,
-            getTypeForTheShape(shapeNode, shapeName, sourceFile, options),
-            sourceFile,
-          ).replace(/ +$/gm, '')}`,
+          text: `\n\n${printer
+            .printNode(
+              ts.EmitHint.Unspecified,
+              getTypeForTheShape(shapeNode, shapeName, sourceFile, options),
+              sourceFile,
+            )
+            .replace(/ +$/gm, '')}`,
         });
 
         updates.push({
           kind: 'replace',
           index: node.pos,
           length: node.end,
-          text: `${ts.sys.newLine}${printer.printNode(
-            ts.EmitHint.Unspecified,
-            ts.factory.createVariableStatement(
-              [],
-              ts.factory.createVariableDeclarationList(
-                [
-                  ts.factory.createVariableDeclaration(
-                    shapeName,
-                    undefined,
-                    getShapeTypeNode(shapeName),
-                    shapeNode,
-                  ),
-                ],
-                ts.NodeFlags.Const,
+          text: `${ts.sys.newLine}${printer
+            .printNode(
+              ts.EmitHint.Unspecified,
+              ts.factory.createVariableStatement(
+                [],
+                ts.factory.createVariableDeclarationList(
+                  [
+                    ts.factory.createVariableDeclaration(
+                      shapeName,
+                      undefined,
+                      getShapeTypeNode(shapeName),
+                      shapeNode,
+                    ),
+                  ],
+                  ts.NodeFlags.Const,
+                ),
               ),
-            ),
-            sourceFile,
-          ).replace(/ +$/gm, '')}`,
+              sourceFile,
+            )
+            .replace(/ +$/gm, '')}`,
         });
 
-        const exportShapeExpression = `${ts.sys.newLine}${printer.printNode(
-          ts.EmitHint.Unspecified,
-          ts.factory.createExportAssignment(
-            undefined,
-            undefined,
-            ts.factory.createIdentifier(shapeName),
-          ),
-          sourceFile,
-        ).replace(/ +$/gm, '')}`;
+        const exportShapeExpression = `${ts.sys.newLine}${printer
+          .printNode(
+            ts.EmitHint.Unspecified,
+            ts.factory.createExportAssignment(
+              undefined,
+              undefined,
+              ts.factory.createIdentifier(shapeName),
+            ),
+            sourceFile,
+          )
+          .replace(/ +$/gm, '')}`;
         updates.push({
           kind: 'insert',
           index: node.end,

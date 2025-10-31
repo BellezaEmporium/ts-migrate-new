@@ -16,7 +16,11 @@ class C {
 }`;
 
     const result = memberAccessibilityPlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { privateRegex: '^_' } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { privateRegex: '^_' },
+      }),
     );
 
     expect(result).toBe(`\
@@ -41,7 +45,11 @@ const o = {
 }`;
 
     const result = memberAccessibilityPlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { privateRegex: '^_' } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { privateRegex: '^_' },
+      }),
     );
 
     expect(result).toBe(text);

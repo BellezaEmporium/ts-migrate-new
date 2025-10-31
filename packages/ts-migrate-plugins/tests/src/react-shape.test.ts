@@ -145,7 +145,11 @@ export default PropTypes.shape({
 });`;
 
     const result = await reactShapePlugin.run(
-      mockPluginParams({ text, fileName: 'MyShape.js', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'MyShape.js',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
     expect(result).toBe(`import PropTypes from 'prop-types';
 import ReviewShape from './ReviewShape';
@@ -178,7 +182,11 @@ const ArrayShape = PropTypes.arrayOf(
 );
 export default ArrayShape;`;
     const result = await reactShapePlugin.run(
-      mockPluginParams({ text, fileName: 'ArrayShape.js', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'ArrayShape.js',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
     expect(result).toBe(`import PropTypes from 'prop-types';
 
@@ -216,7 +224,11 @@ export default Types.shape({
   hostRecipients: Types.arrayOf(Types.object),
 });`;
     const result = await reactShapePlugin.run(
-      mockPluginParams({ text, fileName: 'MyShape.js', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'MyShape.js',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
     expect(result).toBe(`import PropTypes from "prop-types";
 import { Shape, Types } from 'react-validators';
@@ -266,7 +278,11 @@ export const ListingSizePropTypes = {
 export const SomeShape = Shape(ListingSizePropTypes);
 export default Shape(ListingSizePropTypes);`;
     const result = await reactShapePlugin.run(
-      mockPluginParams({ text, fileName: 'MyShape.js', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'MyShape.js',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
     expect(result).toBe(`import { Shape, Types } from 'react-validators';
 
@@ -292,7 +308,11 @@ const FloorShape = Shape({
 
 export default FloorShape;`;
     const result = await reactShapePlugin.run(
-      mockPluginParams({ text, fileName: 'MyShape.js', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'MyShape.js',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
     expect(result).toBe(`import PropTypes from "prop-types";
 import { Shape, Types } from 'react-validators';
@@ -327,7 +347,11 @@ const MyShape: PropTypes.Requireable<MyShape> = PropTypes.shape({
 });
 export default MyShape;`;
     const result = await reactShapePlugin.run(
-      mockPluginParams({ text, fileName: 'MyShape.js', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'MyShape.js',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
     expect(result).toBe(`import PropTypes from 'prop-types';
 

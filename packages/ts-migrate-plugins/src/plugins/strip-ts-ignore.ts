@@ -49,7 +49,11 @@ function getTextWithoutIgnores(sourceFile: ts.SourceFile): string {
           const { pos, end } = expandToWhitespace(text, node);
           updates.push({ kind: 'delete', index: pos, length: end - pos });
         } else if (!inTemplate && /^ *\/\/ *@ts-(?:ignore|expect-error)\b/.test(lineText)) {
-          updates.push({ kind: 'delete', index: lineStart, length: lineEnd - lineStart });
+          updates.push({
+            kind: 'delete',
+            index: lineStart,
+            length: lineEnd - lineStart,
+          });
         }
       }
     }

@@ -6,10 +6,7 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "preserve",
-    "lib": [
-      "dom",
-      "esnext"
-    ],
+    "lib": ["dom", "esnext"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": true,

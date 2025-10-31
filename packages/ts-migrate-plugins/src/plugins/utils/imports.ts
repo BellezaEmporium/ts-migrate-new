@@ -242,10 +242,10 @@ export function updateImports(
             ts.factory.createImportClause(
               false,
               nameToAdd.length === 1
-              ? ts.factory.createIdentifier(nameToAdd[0].defaultImport)
-              : undefined,
-                  namedImports,
-                ),
+                ? ts.factory.createIdentifier(nameToAdd[0].defaultImport)
+                : undefined,
+              namedImports,
+            ),
             ts.factory.createStringLiteral(moduleSpecifier),
           ),
         );
@@ -335,7 +335,9 @@ function isModuleImport(update: AnyImport): update is ModuleImport {
 }
 
 function uniqAddImportUpdates(updates: AddImport[]): AddImport[] {
-  const seen: { [moduleSpecifier: string]: { name: Set<string>; namedImport: Set<string> } } = {};
+  const seen: {
+    [moduleSpecifier: string]: { name: Set<string>; namedImport: Set<string> };
+  } = {};
 
   const initSeen = (moduleSpecifier: string) => {
     if (!seen[moduleSpecifier]) {

@@ -48,6 +48,7 @@ function verifyUpdates(_sourceText: string, updates: SourceTextUpdate[]) {
   // TODO(brie): throw if overlapping updates
 }
 
-function unreachable(_arg: never): never {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function unreachable(_: never): never {
   throw new Error('');
 }

@@ -1,6 +1,8 @@
 import ts from 'typescript';
 
-export type KnownDefinitionMap = { [key: string]: { pos: number; end: number } };
+export type KnownDefinitionMap = {
+  [key: string]: { pos: number; end: number };
+};
 
 /**
  * Recursively finds all identifier nodes within/including a given node
@@ -46,7 +48,10 @@ export function findKnownImports(sourceFile: ts.SourceFile): KnownDefinitionMap 
     }
     const identifiers = collectIdentifierNodes(importClause);
     identifiers.forEach((identifier: ts.Identifier) => {
-      knownImports[identifier.text] = { pos: identifier.pos, end: importClause.end };
+      knownImports[identifier.text] = {
+        pos: identifier.pos,
+        end: importClause.end,
+      };
     });
   });
   return knownImports;
@@ -61,7 +66,10 @@ export function findKnownVariables(sourceFile: ts.SourceFile): KnownDefinitionMa
     declarations.forEach((declaration: ts.VariableDeclaration) => {
       const identifiers = collectIdentifierNodes(declaration.name);
       identifiers.forEach((identifier: ts.Identifier) => {
-        knownVariables[identifier.text] = { pos: identifier.pos, end: declaration.end };
+        knownVariables[identifier.text] = {
+          pos: identifier.pos,
+          end: declaration.end,
+        };
       });
     });
   });

@@ -256,7 +256,11 @@ Foo.defaultProps = {
 `;
 
     const firstResult = await hoistClassStaticsPlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
 
     expect(firstResult).toBe(`import React from 'react';
@@ -416,7 +420,11 @@ export default alt.createStore(Store, 'Store');
 `;
 
     const firstResult = await hoistClassStaticsPlugin.run(
-      mockPluginParams({ text, fileName: 'file.tsx', options: { anyAlias: '$TSFixMe' } }),
+      mockPluginParams({
+        text,
+        fileName: 'file.tsx',
+        options: { anyAlias: '$TSFixMe' },
+      }),
     );
 
     expect(firstResult).toBe(`import alt from '../alt';

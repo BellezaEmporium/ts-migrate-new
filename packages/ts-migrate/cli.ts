@@ -109,8 +109,8 @@ yargs
         .describe('sources', 'Path to a subset of your project to rename (globs are ok).')
         .example('migrate /frontend/foo', 'Migrate all the files in /frontend/foo')
         .example(
-          '$0 migrate /frontend/foo -s "bar/**/*" -s "node_modules/**/*.d.ts"',
-          'Migrate all the files in /frontend/foo/bar, accounting for ambient types from node_modules.',
+          '$0 migrate /frontend/foo -s "bar/**/*" -s "types/**/*.d.ts"',
+          'Migrate all the files in /frontend/foo/bar, accounting for ambient types from dependencies.',
         )
         .example(
           '$0 migrate /frontend/foo --plugin jsdoc',
@@ -138,7 +138,10 @@ yargs
         if (plugin === jsDocPlugin) {
           const anyAlias = args.aliases === 'tsfixme' ? '$TSFixMe' : undefined;
           const typeMap = typeof args.typeMap === 'string' ? JSON.parse(args.typeMap) : undefined;
-          config = new MigrateConfig().addPlugin(jsDocPlugin, { anyAlias, typeMap });
+          config = new MigrateConfig().addPlugin(jsDocPlugin, {
+            anyAlias,
+            typeMap,
+          });
         } else {
           config = new MigrateConfig().addPlugin(plugin, {
             anyAlias,

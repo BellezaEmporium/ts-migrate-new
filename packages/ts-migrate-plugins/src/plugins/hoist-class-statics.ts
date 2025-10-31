@@ -185,7 +185,11 @@ function hoistStaticClassProperties(
             .join(ts.sys.newLine + ts.sys.newLine) +
           ts.sys.newLine;
 
-        updates.push({ kind: 'insert', index: classDeclaration.members[0].pos, text });
+        updates.push({
+          kind: 'insert',
+          index: classDeclaration.members[0].pos,
+          text,
+        });
       }
     }
   });
